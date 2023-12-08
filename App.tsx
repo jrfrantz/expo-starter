@@ -11,7 +11,7 @@ import {
 } from "@privy-io/expo";
 import { useState } from "react";
 
-const appId = "<your-app-ID>";
+const appId = "clpsidj9n00fujt0fh5n2wamm";
 
 function Content() {
   const [email] = useState("");
