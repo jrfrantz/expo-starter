@@ -8,9 +8,11 @@ export default function Layout() {
   return (
     <>
       <PrivyProvider appId="clpsidj9n00fujt0fh5n2wamm">
-        <SafeAreaView>
-          <Slot />
-        </SafeAreaView>
+        <Stack>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="reveal" options={{ presentation: "modal" }} />
+        </Stack>
       </PrivyProvider>
     </>
   );

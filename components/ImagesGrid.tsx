@@ -1,7 +1,9 @@
 import { FlatList, Pressable, Text, View } from "react-native";
 import Animated, {
+  Easing,
   Extrapolation,
   interpolate,
+  runOnJS,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -12,6 +14,8 @@ import ImageTile from "./ImageTile";
 
 import useEmbeddedViemClient from "../hooks/useEmbeddedViemClient";
 import Button from "./Button";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Link } from "expo-router";
 const image0 = require("../assets/synthwave/synthwave_image-0.png");
 const image1 = require("../assets/synthwave/synthwave_image-1.png");
 const image2 = require("../assets/synthwave/synthwave_image-2.png");
@@ -56,17 +60,39 @@ export default function ImagesGrid({}) {
     transform: [{ rotateZ: `${rotation.value}deg` }],
   }));
   const startAnimation = (finalNum: number) =>
-    (rotationDegrees.value = withSpring(finalNum, { duration: 8000 }));
+    (rotationDegrees.value = withTiming(finalNum, { duration: 3000 }));
 
+  const gesture = Gesture.Pan().onUpdate((e) => {
+    rotationDegrees.value = withTiming(
+      (e.velocityY) / 7 + rotation.value,
+      { duration: 1000, easing: Easing.bezier(0.23, 1, 0.32, 1) }
+    );
+  });
   return (
     <Animated.View style={{ flex: 1 }}>
-      <Pressable onPress={() => startAnimation(180)}>
-        <Animated.Text style={[{ padding: 4, justifyContent: 'center', textAlign: 'center', alignItems: 'center', backgroundColor: 'green', }, rotationStyle]}>
-          Spinny
-        </Animated.Text>
-      </Pressable>
-      <Button onClick={() => startAnimation(0)} text="start spin" />
-      <Button onClick={() => {}} text="stio spin" />
+      <GestureDetector gesture={gesture}>
+        <View>
+          <Pressable onPress={() => startAnimation(180)}>
+            <Animated.Text
+              style={[
+                {
+                  padding: 4,
+                  justifyContent: "center",
+                  textAlign: "center",
+                  alignItems: "center",
+                  backgroundColor: "green",
+                },
+                rotationStyle,
+              ]}
+            >
+              Spinny
+            </Animated.Text>
+          </Pressable>
+
+          <Button onClick={() => startAnimation(0)} text="start spin" />
+          <Button onClick={() => {}} text="stio spin" />
+        </View>
+      </GestureDetector>
       <FlatList
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -89,6 +115,7 @@ export default function ImagesGrid({}) {
           padding: 8,
         }}
       >
+        <Link href='/reveal' asChild>
         <Pressable onPress={() => console.log("pressed")}>
           {({ pressed }) => (
             <View
@@ -106,6 +133,7 @@ export default function ImagesGrid({}) {
             </View>
           )}
         </Pressable>
+        </Link>
       </View>
     </Animated.View>
   );
