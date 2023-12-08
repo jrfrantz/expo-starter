@@ -1,8 +1,17 @@
-import { useEmbeddedWallet, isConnected } from "@privy-io/expo";
 import { FlatList, Pressable, Text, View } from "react-native";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import ImageTile from "./ImageTile";
-import { useEffect } from "react";
+
 import useEmbeddedViemClient from "../hooks/useEmbeddedViemClient";
+import Button from "./Button";
 const image0 = require("../assets/synthwave/synthwave_image-0.png");
 const image1 = require("../assets/synthwave/synthwave_image-1.png");
 const image2 = require("../assets/synthwave/synthwave_image-2.png");
@@ -39,9 +48,25 @@ export default function ImagesGrid({}) {
 
   const FOOTER_HEIGHT = 100;
 
+  const rotationDegrees = useSharedValue(0);
+  const rotation = useDerivedValue(() =>
+    interpolate(rotationDegrees.value, [0, 360], [0, 360])
+  );
+  const rotationStyle = useAnimatedStyle(() => ({
+    transform: [{ rotateZ: `${rotation.value}deg` }],
+  }));
+  const startAnimation = (finalNum: number) =>
+    (rotationDegrees.value = withSpring(finalNum, { duration: 8000 }));
+
   return (
-    <View style={{ flex: 1 }}>
-      <Text>imagesgridasdf</Text>
+    <Animated.View style={{ flex: 1 }}>
+      <Pressable onPress={() => startAnimation(180)}>
+        <Animated.Text style={[{ padding: 4, justifyContent: 'center', textAlign: 'center', alignItems: 'center', backgroundColor: 'green', }, rotationStyle]}>
+          Spinny
+        </Animated.Text>
+      </Pressable>
+      <Button onClick={() => startAnimation(0)} text="start spin" />
+      <Button onClick={() => {}} text="stio spin" />
       <FlatList
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -82,6 +107,6 @@ export default function ImagesGrid({}) {
           )}
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   );
 }

@@ -7,15 +7,16 @@ import { usePrivy } from "@privy-io/expo";
 
 export default function ImageTile({ index, item } : { index: number, item: { id: number, url: number, img: any }}) {
   const { userAddress, client } = useEmbeddedViemClient()
+  
   return (
     <View
-      style={{
+      style={[{
         backgroundColor: "gray",
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         width: "50%",
-      }}
+      },]}
     >
       <Text style={{ color: "white" }}>
         {/* You own {item.wagmiResp?.result?.toString()} of token {item.id} */}
