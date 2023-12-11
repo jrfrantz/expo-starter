@@ -1,5 +1,5 @@
-import { FlatList, Pressable, Text, View } from "react-native";
-import Animated, {
+import { FlatList, Pressable, Text, View, Animated } from "react-native";
+import Reanimated, {
   Easing,
   Extrapolation,
   interpolate,
@@ -16,6 +16,7 @@ import useEmbeddedViemClient from "../hooks/useEmbeddedViemClient";
 import Button from "./Button";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Link } from "expo-router";
+import { useRef } from "react";
 const image0 = require("../assets/synthwave/synthwave_image-0.png");
 const image1 = require("../assets/synthwave/synthwave_image-1.png");
 const image2 = require("../assets/synthwave/synthwave_image-2.png");
@@ -49,7 +50,7 @@ const images = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, idx) => ({
 }));
 export default function ImagesGrid({}) {
   const client = useEmbeddedViemClient();
-
+  console.log("rendering");
   const FOOTER_HEIGHT = 100;
 
   const rotationDegrees = useSharedValue(0);
@@ -62,18 +63,26 @@ export default function ImagesGrid({}) {
   const startAnimation = (finalNum: number) =>
     (rotationDegrees.value = withTiming(finalNum, { duration: 3000 }));
 
+  const spinAnimRef = useRef(new Animated.Value(0));
+  const spinTiming = Animated.timing(spinAnimRef.current, {
+    toValue: 1,
+    easing: Easing.linear,
+    duration: 2000,
+    useNativeDriver: true,
+  });
+
   const gesture = Gesture.Pan().onUpdate((e) => {
-    rotationDegrees.value = withTiming(
-      (e.velocityY) / 7 + rotation.value,
-      { duration: 1000, easing: Easing.bezier(0.23, 1, 0.32, 1) }
-    );
+    rotationDegrees.value = withTiming(e.velocityY / 7 + rotation.value, {
+      duration: 1000,
+      easing: Easing.bezier(0.23, 1, 0.32, 1),
+    });
   });
   return (
-    <Animated.View style={{ flex: 1 }}>
+    <Reanimated.View style={{ flex: 1 }}>
       <GestureDetector gesture={gesture}>
         <View>
           <Pressable onPress={() => startAnimation(180)}>
-            <Animated.Text
+            <Reanimated.Text
               style={[
                 {
                   padding: 4,
@@ -86,11 +95,31 @@ export default function ImagesGrid({}) {
               ]}
             >
               Spinny
-            </Animated.Text>
+            </Reanimated.Text>
           </Pressable>
-
-          <Button onClick={() => startAnimation(0)} text="start spin" />
-          <Button onClick={() => {}} text="stio spin" />
+          <Animated.View
+            style={{
+              height: 100,
+              width: "100%",
+              backgroundColor: "gray",
+              opacity: spinAnimRef.current,
+              transform: [
+                {
+                  rotateZ: (Animated.modulo(spinAnimRef.current, 1)).interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["0deg", "1080deg"],
+                  }),
+                },
+              ],
+            }}
+          />
+          <Button onClick={() => startAnimation(0)} text="spin anim start" />
+          <Button
+            onClick={() => {
+              spinTiming.start();
+            }}
+            text="Animation lib start"
+          />
         </View>
       </GestureDetector>
       <FlatList
@@ -115,26 +144,26 @@ export default function ImagesGrid({}) {
           padding: 8,
         }}
       >
-        <Link href='/reveal' asChild>
-        <Pressable onPress={() => console.log("pressed")}>
-          {({ pressed }) => (
-            <View
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: 20,
-                padding: 12,
-                backgroundColor: pressed ? "pink" : "red",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text>Mint random</Text>
-            </View>
-          )}
-        </Pressable>
+        <Link href="/reveal" asChild>
+          <Pressable onPress={() => console.log("pressed")}>
+            {({ pressed }) => (
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 20,
+                  padding: 12,
+                  backgroundColor: pressed ? "pink" : "red",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text>Mint random</Text>
+              </View>
+            )}
+          </Pressable>
         </Link>
       </View>
-    </Animated.View>
+    </Reanimated.View>
   );
 }
