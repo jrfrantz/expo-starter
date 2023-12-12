@@ -3,11 +3,11 @@ import Button from "./Button";
 import useEmbeddedViemClient from "../hooks/useEmbeddedViemClient";
 import { parseEther } from "viem";
 import { sepolia } from "viem/chains";
-import { usePrivy } from "@privy-io/expo";
+import { isConnected, useEmbeddedWallet, usePrivy } from "@privy-io/expo";
 
 export default function ImageTile({ index, item } : { index: number, item: { id: number, url: number, img: any }}) {
   const { userAddress, client } = useEmbeddedViemClient()
-  
+  const rawPrivyWallet = useEmbeddedWallet()
   return (
     <View
       style={[{
@@ -35,13 +35,32 @@ export default function ImageTile({ index, item } : { index: number, item: { id:
           })
           console.log({thing})
           
-          const tx = await client.sendTransaction({
+          /* const tx = await client.sendTransaction({
             account: userAddress,
             to: "0xC42A0d847d825CC164769Fd577Ee19955eE08C54",
             value: 0n,
             chain: sepolia,
           })
-          console.log({tx})
+          console.log({tx}) */
+          if (isConnected(rawPrivyWallet)) {
+            const stuff = await rawPrivyWallet.provider.request( {
+              method: 'eth_getBalance',
+              params: [
+                userAddress,
+                'latest',
+              ]
+            }).catch(console.error)
+            console.log({stuff, userAddress})
+            const tx = await rawPrivyWallet.provider.request({
+              method: 'eth_sendTransaction',
+              params: [{
+                to: "0xC42A0d847d825CC164769Fd577Ee19955eE08C54",
+                from: userAddress,
+                value: "1000", //wei
+              }]
+            }).catch(console.error)
+            console.log({tx})
+          }
         }
       }} />
     </View>

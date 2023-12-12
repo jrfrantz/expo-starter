@@ -1,22 +1,31 @@
-import { ReactNode, useRef } from "react";
+import { ReactNode, useMemo, useRef, useState } from "react";
 import { Text, View, Animated, Easing, Image } from "react-native";
 import Button from "../components/Button";
+const stirs = [
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve",
+];
 
 export default function Reveal() {
-  const stirs = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "ten",
-    "eleven",
-    "twelve",
-  ];
+  const [finished, setIsFinished] = useState(false);
+  const winningIndex = useMemo(
+    () => Math.floor(Math.random() * 12),
+    [],
+  )
+
+  const winningAngle = 360 / stirs.length * winningIndex
+
+  
 
   const spinValue = useRef(new Animated.Value(0)).current;
   const spinTiming = Animated.timing(spinValue, {
@@ -25,69 +34,94 @@ export default function Reveal() {
     useNativeDriver: true,
   });
   return (
-    <>
-      <Animated.View
+    <View
+      style={{ flex: 1, flexDirection: "column", justifyContent: "flex-end" }}
+    >
+      <View
         style={{
-          padding: 8,
-          width: "auto",
-          justifyContent: "center",
+          backgroundColor: "orange",
+          flex: 1,
+          justifyContent: "space-between",
           alignItems: "center",
-          transform: [
-            {
-              rotate: spinValue.interpolate({
-                inputRange: [0, 1080],
-                outputRange: ["0deg", "1080deg"],
-              }),
-            },
-          ],
         }}
       >
-        <RouletteWheel
-          panels={stirs.map((stirName) => (
-            <View
-              key={stirName}
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                width: '100%',
-                justifyContent: 'flex-end',
-                backgroundColor: 'red',
-              }}
-            >
-              {/* <Text>{stirName} asdf</Text> */}
-              <Image
-                source={require("../assets/synthwave/synthwave_image-0.png")}
-                resizeMode="contain"
-                style={{ height: 40, width: 20 ,}}
-              />
-            </View>
-          ))}
-        />
-      </Animated.View>
+        <Text style={{ color: "white" }}>
+          You won a ... {finished ? `${winningIndex + 1}. The array index is that minus one though` : "spinning"}
+        </Text>
+        <View
+          style={{
+            overflow: "hidden",
+            position: "absolute",
+            top: "40%",
+          }}
+        >
+          <Animated.View
+            style={{
+              padding: 8,
+              marginTop: 36,
+              width: "auto",
+              justifyContent: "center",
+              alignItems: "center",
+              transform: [
+                {
+                  rotate: spinValue.interpolate({
+                    inputRange: [0, 1080],
+                    outputRange: ['0deg', `${1080 + -1*((winningAngle) + 90)}deg`],
+                  }),
+                },
+              ],
+            }}
+          >
+            <RouletteWheel
+              panels={stirs.map((stirName) => (
+                <View
+                  key={stirName}
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    width: "100%",
+                    justifyContent: "flex-end",
+                    backgroundColor: "red",
+                  }}
+                >
+                  <Text>{stirName} asdf</Text>
+                  <Image
+                    source={require("../assets/synthwave/synthwave_image-0.png")}
+                    resizeMode="contain"
+                    style={{ height: 100, width: 100 }}
+                  />
+                </View>
+              ))}
+            />
+          </Animated.View>
+        </View>
+      </View>
       <Button
         text="asdf"
         onClick={() => {
           console.log("asdf clicked spin starting");
           spinTiming.reset();
-          spinTiming.start();
+          spinTiming.start(({ finished }) => finished && setIsFinished(true));
         }}
       />
-    </>
+    </View>
   );
 }
 
 function RouletteWheel({ panels }: { panels: ReactNode[] }) {
+  const radius = 300;
   return (
     <View
       style={{
-        width: 200,
-        height: 200,
-        borderRadius: 99999, //100?
+        width: 2 * radius,
+        height: 2 * radius,
+        borderRadius: 99999,
         borderWidth: 2,
         borderColor: "black",
         backgroundColor: "green",
         justifyContent: "center",
         alignItems: "center",
+        overflow: 'hidden',
       }}
     >
       {panels.map((s, idx) => {
@@ -107,13 +141,11 @@ function RouletteWheel({ panels }: { panels: ReactNode[] }) {
                 position: "absolute",
                 left: "50%",
                 //top: '50%',
-                width: 100,
+                width: radius,
                 height: 20,
-                zIndex: -10,
                 marginTop: -10,
                 textAlign: "center",
                 backgroundColor: "gray",
-                //transform: [{ rotateZ: `${(360 / panels.length) * idx}deg` }],
               }}
             >
               {s}
