@@ -1,6 +1,9 @@
+import Fontisto from "@expo/vector-icons/Fontisto";
+import { FontAwesome5 } from '@expo/vector-icons';
 import { ReactNode, useMemo, useRef, useState } from "react";
 import { Text, View, Animated, Easing, Image } from "react-native";
 import Button from "../components/Button";
+import RouletteWheel from "../components/RouletteWheel";
 const stirs = [
   "one",
   "two",
@@ -18,19 +21,15 @@ const stirs = [
 
 export default function Reveal() {
   const [finished, setIsFinished] = useState(false);
-  const winningIndex = useMemo(
-    () => Math.floor(Math.random() * 12),
-    [],
-  )
+  const winningIndex = useMemo(() => Math.floor(Math.random() * 12), []);
 
-  const winningAngle = 360 / stirs.length * winningIndex
-
-  
+  const winningAngle = (360 / stirs.length) * winningIndex;
 
   const spinValue = useRef(new Animated.Value(0)).current;
   const spinTiming = Animated.timing(spinValue, {
     toValue: 1080,
     duration: 2000,
+    easing: Easing.out(Easing.circle),
     useNativeDriver: true,
   });
   return (
@@ -46,7 +45,10 @@ export default function Reveal() {
         }}
       >
         <Text style={{ color: "white" }}>
-          You won a ... {finished ? `${winningIndex + 1}. The array index is that minus one though` : "spinning"}
+          You won a ...{" "}
+          {finished
+            ? `${winningIndex + 1}. The array index is that minus one though`
+            : "spinning"}
         </Text>
         <View
           style={{
@@ -55,6 +57,27 @@ export default function Reveal() {
             top: "40%",
           }}
         >
+          <Animated.View
+            style={{
+              height: 100,
+              width: "100%",
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'relative',
+              top: 70,
+              zIndex: 100,
+              transform: [
+                {
+                  rotate: Animated.modulo(spinValue, 360 / stirs.length).interpolate({
+                    inputRange: [0, 360/stirs.length],
+                    outputRange: ["0deg", "20deg"],
+                  }),
+                }
+              ]
+            }}
+          >
+            <FontAwesome5 name="map-marker" size={72} color="red" />
+          </Animated.View>
           <Animated.View
             style={{
               padding: 8,
@@ -66,7 +89,10 @@ export default function Reveal() {
                 {
                   rotate: spinValue.interpolate({
                     inputRange: [0, 1080],
-                    outputRange: ['0deg', `${1080 + -1*((winningAngle) + 90)}deg`],
+                    outputRange: [
+                      "0deg",
+                      `${1080 + -1 * (winningAngle + 90)}deg`,
+                    ],
                   }),
                 },
               ],
@@ -81,8 +107,7 @@ export default function Reveal() {
                     flexDirection: "row",
                     width: "100%",
                     justifyContent: "flex-end",
-                    backgroundColor: ['red','green','blue'].at(idx % 3),
-                    
+                    backgroundColor: ["red", "green", "blue"].at(idx % 3),
                   }}
                 >
                   <Text>{stirName} asdf</Text>
@@ -105,55 +130,6 @@ export default function Reveal() {
           spinTiming.start(({ finished }) => finished && setIsFinished(true));
         }}
       />
-    </View>
-  );
-}
-
-function RouletteWheel({ panels }: { panels: ReactNode[] }) {
-  const radius = 300;
-  return (
-    <View
-      style={{
-        width: 2 * radius,
-        height: 2 * radius,
-        borderRadius: 99999,
-        borderWidth: 2,
-        borderColor: "black",
-        backgroundColor: "green",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: 'hidden',
-      }}
-    >
-      {panels.map((s, idx) => {
-        return (
-          <View
-            key={idx}
-            style={{
-              width: "88%",
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-              transform: [{ rotateZ: `${(360 / panels.length) * idx}deg` }],
-            }}
-          >
-            <Text
-              key={`${s}-${idx}`}
-              style={{
-                position: "absolute",
-                left: "50%",
-                //top: '50%',
-                width: radius,
-                height: 20,
-                marginTop: -10,
-                textAlign: "center",
-                backgroundColor: "gray",
-              }}
-            >
-              {s}
-            </Text>
-          </View>
-        );
-      })}
     </View>
   );
 }
