@@ -73,7 +73,7 @@ export default function Reveal() {
             }}
           >
             <RouletteWheel
-              panels={stirs.map((stirName) => (
+              panels={stirs.map((stirName, idx) => (
                 <View
                   key={stirName}
                   style={{
@@ -81,7 +81,8 @@ export default function Reveal() {
                     flexDirection: "row",
                     width: "100%",
                     justifyContent: "flex-end",
-                    backgroundColor: "red",
+                    backgroundColor: ['red','green','blue'].at(idx % 3),
+                    
                   }}
                 >
                   <Text>{stirName} asdf</Text>

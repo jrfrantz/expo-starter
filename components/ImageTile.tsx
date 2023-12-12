@@ -1,13 +1,17 @@
 import { View, Text, Image } from "react-native";
 import Button from "./Button";
 import useEmbeddedViemClient from "../hooks/useEmbeddedViemClient";
-import { parseEther } from "viem";
+import { createWalletClient, custom, parseEther } from "viem";
 import { sepolia } from "viem/chains";
 import { isConnected, useEmbeddedWallet, usePrivy } from "@privy-io/expo";
+import useMintNft from "../hooks/useMintNft";
 
 export default function ImageTile({ index, item } : { index: number, item: { id: number, url: number, img: any }}) {
   const { userAddress, client } = useEmbeddedViemClient()
   const rawPrivyWallet = useEmbeddedWallet()
+  const {txHash, mint, isLoading, error} = useMintNft(item.id)
+
+  console.log({txHash, isLoading, error})
   return (
     <View
       style={[{
@@ -26,43 +30,6 @@ export default function ImageTile({ index, item } : { index: number, item: { id:
         resizeMode="contain"
         style={{ width: "100%", height: 100 }}
       />
-      <Button text="Mint one" onClick={async () => {
-        console.log("pressed ", index)
-        if (client && userAddress) {
-          const thing = await client.signMessage({
-            account: userAddress,
-            message: 'Hey what is up'
-          })
-          console.log({thing})
-          
-          /* const tx = await client.sendTransaction({
-            account: userAddress,
-            to: "0xC42A0d847d825CC164769Fd577Ee19955eE08C54",
-            value: 0n,
-            chain: sepolia,
-          })
-          console.log({tx}) */
-          if (isConnected(rawPrivyWallet)) {
-            const stuff = await rawPrivyWallet.provider.request( {
-              method: 'eth_getBalance',
-              params: [
-                userAddress,
-                'latest',
-              ]
-            }).catch(console.error)
-            console.log({stuff, userAddress})
-            const tx = await rawPrivyWallet.provider.request({
-              method: 'eth_sendTransaction',
-              params: [{
-                to: "0xC42A0d847d825CC164769Fd577Ee19955eE08C54",
-                from: userAddress,
-                value: "1000", //wei
-              }]
-            }).catch(console.error)
-            console.log({tx})
-          }
-        }
-      }} />
     </View>
   );
 }

@@ -53,75 +53,8 @@ export default function ImagesGrid({}) {
   console.log("rendering");
   const FOOTER_HEIGHT = 100;
 
-  const rotationDegrees = useSharedValue(0);
-  const rotation = useDerivedValue(() =>
-    interpolate(rotationDegrees.value, [0, 360], [0, 360])
-  );
-  const rotationStyle = useAnimatedStyle(() => ({
-    transform: [{ rotateZ: `${rotation.value}deg` }],
-  }));
-  const startAnimation = (finalNum: number) =>
-    (rotationDegrees.value = withTiming(finalNum, { duration: 3000 }));
-
-  const spinAnimRef = useRef(new Animated.Value(0));
-  const spinTiming = Animated.timing(spinAnimRef.current, {
-    toValue: 1,
-    easing: Easing.linear,
-    duration: 2000,
-    useNativeDriver: true,
-  });
-
-  const gesture = Gesture.Pan().onUpdate((e) => {
-    rotationDegrees.value = withTiming(e.velocityY / 7 + rotation.value, {
-      duration: 1000,
-      easing: Easing.bezier(0.23, 1, 0.32, 1),
-    });
-  });
   return (
-    <Reanimated.View style={{ flex: 1 }}>
-      <GestureDetector gesture={gesture}>
-        <View>
-          <Pressable onPress={() => startAnimation(180)}>
-            <Reanimated.Text
-              style={[
-                {
-                  padding: 4,
-                  justifyContent: "center",
-                  textAlign: "center",
-                  alignItems: "center",
-                  backgroundColor: "green",
-                },
-                rotationStyle,
-              ]}
-            >
-              Spinny
-            </Reanimated.Text>
-          </Pressable>
-          <Animated.View
-            style={{
-              height: 100,
-              width: "100%",
-              backgroundColor: "gray",
-              opacity: spinAnimRef.current,
-              transform: [
-                {
-                  rotateZ: (Animated.modulo(spinAnimRef.current, 1)).interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ["0deg", "1080deg"],
-                  }),
-                },
-              ],
-            }}
-          />
-          <Button onClick={() => startAnimation(0)} text="spin anim start" />
-          <Button
-            onClick={() => {
-              spinTiming.start();
-            }}
-            text="Animation lib start"
-          />
-        </View>
-      </GestureDetector>
+    <Reanimated.View style={{ flex: 1,}}>
       <FlatList
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -166,4 +99,77 @@ export default function ImagesGrid({}) {
       </View>
     </Reanimated.View>
   );
+}
+
+function OldJunk() {
+
+  const rotationDegrees = useSharedValue(0);
+  const rotation = useDerivedValue(() =>
+    interpolate(rotationDegrees.value, [0, 360], [0, 360])
+  );
+  const rotationStyle = useAnimatedStyle(() => ({
+    transform: [{ rotateZ: `${rotation.value}deg` }],
+  }));
+  const startAnimation = (finalNum: number) =>
+    (rotationDegrees.value = withTiming(finalNum, { duration: 3000 }));
+
+  const spinAnimRef = useRef(new Animated.Value(0));
+  const spinTiming = Animated.timing(spinAnimRef.current, {
+    toValue: 1,
+    easing: Easing.linear,
+    duration: 2000,
+    useNativeDriver: true,
+  });
+
+  const gesture = Gesture.Pan().onUpdate((e) => {
+    rotationDegrees.value = withTiming(e.velocityY / 7 + rotation.value, {
+      duration: 1000,
+      easing: Easing.bezier(0.23, 1, 0.32, 1),
+    });
+  });
+  return (
+    <GestureDetector gesture={gesture}>
+    <View>
+      <Pressable onPress={() => startAnimation(180)}>
+        <Reanimated.Text
+          style={[
+            {
+              padding: 4,
+              justifyContent: "center",
+              textAlign: "center",
+              alignItems: "center",
+              backgroundColor: "green",
+            },
+            rotationStyle,
+          ]}
+        >
+          Spinny
+        </Reanimated.Text>
+      </Pressable>
+      <Animated.View
+        style={{
+          height: 100,
+          width: "100%",
+          backgroundColor: "gray",
+          opacity: spinAnimRef.current,
+          transform: [
+            {
+              rotateZ: (Animated.modulo(spinAnimRef.current, 1)).interpolate({
+                inputRange: [0, 1],
+                outputRange: ["0deg", "1080deg"],
+              }),
+            },
+          ],
+        }}
+      />
+      <Button onClick={() => startAnimation(0)} text="spin anim start" />
+      <Button
+        onClick={() => {
+          spinTiming.start();
+        }}
+        text="Animation lib start"
+      />
+    </View>
+  </GestureDetector>
+  )
 }

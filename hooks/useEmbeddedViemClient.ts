@@ -22,7 +22,12 @@ export default function useEmbeddedViemClient() {
           transport: custom(wallet.provider),
         })
         const addresses = await walletClient.getAddresses()
-        setClient(walletClient)
+        const hoisted = createWalletClient({
+          account: addresses[0],
+          //chain: sepolia,
+          transport: custom(wallet.provider),
+        })
+        setClient(hoisted)
         setUserAddress(addresses[0])
       }
     }
