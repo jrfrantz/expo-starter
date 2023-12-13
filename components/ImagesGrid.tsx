@@ -55,7 +55,7 @@ const imageTitles = [
   "Torn Rider",
   "Fashionista",
   "Beach B0d",
-]
+];
 
 export const images = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, idx) => ({
   id: idx,
@@ -75,7 +75,7 @@ export default function ImagesGrid({}) {
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         renderItem={({ item, index }) => (
-          <ImageTile item={item} index={index} ownershipCount={undefined}/>
+          <ImageTile item={item} index={index} ownershipCount={undefined} />
         )}
         contentContainerStyle={{
           paddingBottom: FOOTER_HEIGHT,
@@ -92,27 +92,28 @@ export default function ImagesGrid({}) {
         }}
       >
         <Link href="/reveal" asChild>
-          <Pressable onPress={() => console.log("pressed")}>
-            {({ pressed }) => (
-              <View
+          <Pressable>
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 20,
+                padding: 12,
+                backgroundColor: "#081F1F",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 20,
-                  padding: 12,
-                  backgroundColor: "#081F1F",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{
-                  color: 'white',
-                  fontWeight: '700',
+                  color: "white",
+                  fontWeight: "700",
                   fontSize: 24,
                 }}
-                >Mint random</Text>
-              </View>
-            )}
+              >
+                Mint Random
+              </Text>
+            </View>
           </Pressable>
         </Link>
       </View>
@@ -121,7 +122,6 @@ export default function ImagesGrid({}) {
 }
 
 function OldJunk() {
-
   const rotationDegrees = useSharedValue(0);
   const rotation = useDerivedValue(() =>
     interpolate(rotationDegrees.value, [0, 360], [0, 360])
@@ -148,47 +148,47 @@ function OldJunk() {
   });
   return (
     <GestureDetector gesture={gesture}>
-    <View>
-      <Pressable onPress={() => startAnimation(180)}>
-        <Reanimated.Text
-          style={[
-            {
-              padding: 4,
-              justifyContent: "center",
-              textAlign: "center",
-              alignItems: "center",
-              backgroundColor: "green",
-            },
-            rotationStyle,
-          ]}
-        >
-          Spinny
-        </Reanimated.Text>
-      </Pressable>
-      <Animated.View
-        style={{
-          height: 100,
-          width: "100%",
-          backgroundColor: "gray",
-          opacity: spinAnimRef.current,
-          transform: [
-            {
-              rotateZ: (Animated.modulo(spinAnimRef.current, 1)).interpolate({
-                inputRange: [0, 1],
-                outputRange: ["0deg", "1080deg"],
-              }),
-            },
-          ],
-        }}
-      />
-      <Button onClick={() => startAnimation(0)} text="spin anim start" />
-      <Button
-        onClick={() => {
-          spinTiming.start();
-        }}
-        text="Animation lib start"
-      />
-    </View>
-  </GestureDetector>
-  )
+      <View>
+        <Pressable onPress={() => startAnimation(180)}>
+          <Reanimated.Text
+            style={[
+              {
+                padding: 4,
+                justifyContent: "center",
+                textAlign: "center",
+                alignItems: "center",
+                backgroundColor: "green",
+              },
+              rotationStyle,
+            ]}
+          >
+            Spinny
+          </Reanimated.Text>
+        </Pressable>
+        <Animated.View
+          style={{
+            height: 100,
+            width: "100%",
+            backgroundColor: "gray",
+            opacity: spinAnimRef.current,
+            transform: [
+              {
+                rotateZ: Animated.modulo(spinAnimRef.current, 1).interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ["0deg", "1080deg"],
+                }),
+              },
+            ],
+          }}
+        />
+        <Button onClick={() => startAnimation(0)} text="spin anim start" />
+        <Button
+          onClick={() => {
+            spinTiming.start();
+          }}
+          text="Animation lib start"
+        />
+      </View>
+    </GestureDetector>
+  );
 }
