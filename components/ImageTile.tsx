@@ -6,7 +6,7 @@ import { sepolia } from "viem/chains";
 import { isConnected, useEmbeddedWallet, usePrivy } from "@privy-io/expo";
 import useMintNft from "../hooks/useMintNft";
 
-export default function ImageTile({ index, item } : { index: number, item: { id: number, url: number, img: any }}) {
+export default function ImageTile({ index, item, ownershipCount } : { index: number, item: { id: number, url: number, img: any, title: string, }, ownershipCount: number | undefined}) {
   const { userAddress, client } = useEmbeddedViemClient()
   const rawPrivyWallet = useEmbeddedWallet()
 
@@ -31,7 +31,7 @@ export default function ImageTile({ index, item } : { index: number, item: { id:
           overflow: 'hidden',
         }}
       />
-      <Text>Car stuff</Text>
+      <Text>{item.title}</Text>
     </View>
   );
 }

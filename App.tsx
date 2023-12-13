@@ -10,6 +10,7 @@ import {
   usePrivy,
 } from "@privy-io/expo";
 import { useState } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const appId = "clpsidj9n00fujt0fh5n2wamm";
 
@@ -135,11 +136,13 @@ export default function App() {
   }
 
   return (
+    <SafeAreaProvider>
     <PrivyProvider appId={appId}>
       <View style={styles.container}>
         <Content />
       </View>
     </PrivyProvider>
+    </SafeAreaProvider>
   );
 }
 

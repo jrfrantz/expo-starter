@@ -1,4 +1,4 @@
-import { Image, Text, View } from "react-native";
+import { Image, SafeAreaView, Text, View } from "react-native";
 import { isNotCreated, useEmbeddedWallet, usePrivy } from "@privy-io/expo";
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
@@ -24,10 +24,12 @@ export default function Page() {
   }, [user, wallet, isReady])
 
   return (
+    <SafeAreaView>
     <View style={{ backgroundColor: "orange", height: "100%", width: "100%" }}>
       <Text>asdf</Text>
       <ImagesGrid />
       
     </View>
+    </SafeAreaView>
   );
 }

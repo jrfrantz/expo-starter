@@ -43,10 +43,25 @@ const imagesAssets = [
   image10,
 ];
 
+const imageTitles = [
+  "Dreamy Recording Studio",
+  "Neon Forest",
+  "Eating Out",
+  "Arcade King",
+  "Dreamsicle Sunset",
+  "Space Cadet",
+  "Disco Fiebre",
+  "Izakaya",
+  "Torn Rider",
+  "Fashionista",
+  "Beach B0d",
+]
+
 export const images = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, idx) => ({
   id: idx,
   url: idx,
   img: imagesAssets.at(idx),
+  title: imageTitles[idx],
 }));
 export default function ImagesGrid({}) {
   const client = useEmbeddedViemClient();
@@ -60,7 +75,7 @@ export default function ImagesGrid({}) {
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         renderItem={({ item, index }) => (
-          <ImageTile item={item} index={index} />
+          <ImageTile item={item} index={index} ownershipCount={undefined}/>
         )}
         contentContainerStyle={{
           paddingBottom: FOOTER_HEIGHT,

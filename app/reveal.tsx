@@ -1,11 +1,12 @@
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { Text, View, Animated, Easing, Image } from "react-native";
+import { Text, View, Animated, Easing, Image, Pressable } from "react-native";
 import Button from "../components/Button";
 import RouletteWheel from "../components/RouletteWheel";
 import { images } from "../components/ImagesGrid";
 import useMintNft from "../hooks/useMintNft";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const stirs = [
   "one",
   "two",
@@ -22,6 +23,7 @@ const stirs = [
 ];
 
 export default function Reveal() {
+  const insets = useSafeAreaInsets()
   const [finished, setIsFinished] = useState(false);
   const winningIndex = useMemo(() => Math.floor(Math.random() * 11), []);
   const {txHash, mint, isLoading, error} = useMintNft()
@@ -162,17 +164,29 @@ export default function Reveal() {
           </Animated.View>
         </View>
       </View>
-      <Button
-        text="asdf"
-        onClick={() => {
-          console.log("asdf clicked spin starting");
-          spinTiming.reset();
-          // start the spinner
-          spinTiming.start(({ finished }) => finished && setIsFinished(true));
-          // kick off the mint
-          mint(winningIndex)
-        }}
-      />
+      <Pressable onPress={() => {
+        console.log("asdf clicked spin starting");
+        spinTiming.reset();
+        // start the spinner
+        spinTiming.start(({ finished }) => finished && setIsFinished(true));
+        // kick off the mint
+        mint(winningIndex)
+      }}>
+        <View style={{
+          backgroundColor: 'blue', 
+          margin: 4, 
+          padding: 14, 
+          borderRadius: 10,
+          opacity: .8,
+          marginBottom: insets.bottom,
+          shadowColor: '#171717',
+          shadowOffset: {width: 0, height: 15},
+          shadowOpacity: .4,
+          shadowRadius: 3,
+        }}>
+          <Text style={{color: 'white',}}>Asdf</Text>
+        </View>
+      </Pressable>
     </View>
   );
 }
