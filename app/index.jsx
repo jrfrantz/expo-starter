@@ -29,8 +29,15 @@ export default function Page() {
       <View
         style={{  height: "100%", width: "100%" }}
       >
-        <LinearGradient style={{height: '100%', width: '100%', }} colors={["#937DE530", "#50E2C830"]}>
-          <Text>asdf</Text>
+        <LinearGradient 
+          style={{
+            height: '100%', 
+            width: '100%', 
+            paddingTop: 18,
+          }} 
+          colors={["#937DE530", "#50E2C830"]}
+          start={{ x: .07, y: 0 }}
+        >
           <ImagesGrid />
         </LinearGradient>
       </View>

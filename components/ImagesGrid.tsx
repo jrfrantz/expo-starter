@@ -69,7 +69,7 @@ export default function ImagesGrid({}) {
   const FOOTER_HEIGHT = 100;
 
   return (
-    <Reanimated.View style={{ flex: 1,}}>
+    <>
       <FlatList
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -88,7 +88,6 @@ export default function ImagesGrid({}) {
           bottom: 0,
           right: 0,
           height: FOOTER_HEIGHT,
-          backgroundColor: "green",
           padding: 8,
         }}
       >
@@ -101,18 +100,23 @@ export default function ImagesGrid({}) {
                   height: "100%",
                   borderRadius: 20,
                   padding: 12,
-                  backgroundColor: pressed ? "pink" : "red",
+                  backgroundColor: "#081F1F",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Text>Mint random</Text>
+                <Text style={{
+                  color: 'white',
+                  fontWeight: '700',
+                  fontSize: 24,
+                }}
+                >Mint random</Text>
               </View>
             )}
           </Pressable>
         </Link>
       </View>
-    </Reanimated.View>
+    </>
   );
 }
 
