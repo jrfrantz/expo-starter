@@ -5,13 +5,13 @@ import { useState } from "react";
 
 const BASE_URL = 'https://turbo-echo-web.vercel.app/'
 
-export default function useMintNft(tokenId: number) {
+export default function useMintNft() {
   const [txHash, setTxHash] = useState(null)
   const [error, setError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { userAddress } = useEmbeddedViemClient()
 
-  async function mint() {
+  async function mint(tokenId: number) {
     setError(false)
     setIsLoading(true)
     try { 

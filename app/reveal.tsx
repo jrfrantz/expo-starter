@@ -1,9 +1,11 @@
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { FontAwesome5 } from '@expo/vector-icons';
-import { ReactNode, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Text, View, Animated, Easing, Image } from "react-native";
 import Button from "../components/Button";
 import RouletteWheel from "../components/RouletteWheel";
+import { images } from "../components/ImagesGrid";
+import useMintNft from "../hooks/useMintNft";
 const stirs = [
   "one",
   "two",
@@ -21,8 +23,9 @@ const stirs = [
 
 export default function Reveal() {
   const [finished, setIsFinished] = useState(false);
-  const winningIndex = useMemo(() => Math.floor(Math.random() * 12), []);
-
+  const winningIndex = useMemo(() => Math.floor(Math.random() * 11), []);
+  const {txHash, mint, isLoading, error} = useMintNft()
+  console.log({txHash, mint, isLoading, error})
   const winningAngle = (360 / stirs.length) * winningIndex;
 
   const spinValue = useRef(new Animated.Value(0)).current;
@@ -32,6 +35,17 @@ export default function Reveal() {
     easing: Easing.out(Easing.circle),
     useNativeDriver: true,
   });
+
+  const revealItemSizeValue = useRef(new Animated.Value(0)).current;
+  const revealItemTiming = Animated.timing(revealItemSizeValue, {
+    toValue: 1,
+    duration: 2000,
+    easing: Easing.exp,
+    useNativeDriver: true,
+  })
+
+  useEffect(() => {finished && revealItemTiming.start()}, [finished])
+
   return (
     <View
       style={{ flex: 1, flexDirection: "column", justifyContent: "flex-end" }}
@@ -44,12 +58,38 @@ export default function Reveal() {
           alignItems: "center",
         }}
       >
-        <Text style={{ color: "white" }}>
-          You won a ...{" "}
-          {finished
-            ? `${winningIndex + 1}. The array index is that minus one though`
-            : "spinning"}
-        </Text>
+        <Animated.View style={{
+          backgroundColor: 'white',
+          width: '75%',
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent:"flex-start",
+          alignContent: 'center',
+          transform: [
+            { scale: revealItemSizeValue },
+            { translateY: revealItemSizeValue.interpolate({
+              inputRange: [0,1],
+              outputRange: [0, 50],
+            }) }
+          ],
+        }}>
+          <Text style={{ 
+            color: "black", 
+            fontSize: 12,
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}>
+            You won a ...{" "}
+            {finished
+              ? `${winningIndex + 1}. The array index is that minus one though`
+              : "spinning"}
+          </Text>
+          <Image source={images[winningIndex]?.img ?? ""} resizeMode="contain" style={{
+            height: 200,
+            width: 200,
+            alignSelf: 'center',
+          }}/>
+        </Animated.View>
         <View
           style={{
             overflow: "hidden",
@@ -99,7 +139,7 @@ export default function Reveal() {
             }}
           >
             <RouletteWheel
-              panels={stirs.map((stirName, idx) => (
+              panels={stirs.map((stirName, idx) => {return (
                 <View
                   key={stirName}
                   style={{
@@ -112,12 +152,12 @@ export default function Reveal() {
                 >
                   <Text>{stirName} asdf</Text>
                   <Image
-                    source={require("../assets/synthwave/synthwave_image-0.png")}
+                    source={images[idx]?.img ?? ""}
                     resizeMode="contain"
                     style={{ height: 100, width: 100 }}
                   />
                 </View>
-              ))}
+              )})}
             />
           </Animated.View>
         </View>
@@ -127,7 +167,10 @@ export default function Reveal() {
         onClick={() => {
           console.log("asdf clicked spin starting");
           spinTiming.reset();
+          // start the spinner
           spinTiming.start(({ finished }) => finished && setIsFinished(true));
+          // kick off the mint
+          mint(winningIndex)
         }}
       />
     </View>

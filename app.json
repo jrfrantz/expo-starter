@@ -2,6 +2,7 @@
   "expo": {
     "name": "@privy-io/expo-starter",
     "slug": "privy-expo-starter",
+    "owner": "firstmate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -32,6 +33,14 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ad330e6b-6245-44be-8928-e1da1cf1d95c"
+      }
+    }
   }
 }

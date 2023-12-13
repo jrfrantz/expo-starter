@@ -9,9 +9,7 @@ import useMintNft from "../hooks/useMintNft";
 export default function ImageTile({ index, item } : { index: number, item: { id: number, url: number, img: any }}) {
   const { userAddress, client } = useEmbeddedViemClient()
   const rawPrivyWallet = useEmbeddedWallet()
-  const {txHash, mint, isLoading, error} = useMintNft(item.id)
 
-  console.log({txHash, isLoading, error})
   return (
     <View
       style={[{
