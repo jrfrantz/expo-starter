@@ -13,21 +13,25 @@ export default function ImageTile({ index, item } : { index: number, item: { id:
   return (
     <View
       style={[{
-        backgroundColor: "gray",
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         width: "50%",
+        marginBottom: 15,
+        overflow: 'hidden',
       },]}
     >
-      <Text style={{ color: "white" }}>
-        {/* You own {item.wagmiResp?.result?.toString()} of token {item.id} */}
-      </Text>
       <Image
         source={item.img}
-        resizeMode="contain"
-        style={{ width: "100%", height: 100 }}
+        resizeMode="cover"
+        style={{ 
+          width: 100, 
+          height: 100,
+          borderRadius: 12,
+          overflow: 'hidden',
+        }}
       />
+      <Text>Car stuff</Text>
     </View>
   );
 }

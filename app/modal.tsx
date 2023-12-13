@@ -1,4 +1,4 @@
-import { useLoginWithSMS } from '@privy-io/expo'
+import { isNotCreated, useEmbeddedWallet, useLoginWithSMS, usePrivy } from '@privy-io/expo'
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, TextInput, View, Text } from 'react-native';
@@ -9,14 +9,12 @@ export default function Login() {
   const [phoneNum, setPhoneNum] = useState("");
   const [smsCode, setSmsCode] = useState("");
 
+  const { isReady } = usePrivy()
+  const wallet = useEmbeddedWallet()
+
   const sms = useLoginWithSMS();
   const router = useRouter()
 
-  useEffect( () => {
-    if (sms.state.status === 'done') {
-      router.replace('/')
-    }
-  }, [sms.state.status])
   return (
     <View>
       <Text>Log in</Text>
