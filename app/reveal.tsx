@@ -44,7 +44,6 @@ export default function Reveal() {
   const revealItemTiming = Animated.timing(revealItemSizeValue, {
     toValue: 1,
     duration: 2000,
-    easing: Easing.exp,
     useNativeDriver: true,
   });
 
@@ -52,9 +51,6 @@ export default function Reveal() {
     finished && revealItemTiming.start();
   }, [finished]);
 
-  /* return (
-    <DemoRouletteWheel />
-  ) */
   return (
     <LinearGradient
       style={{
@@ -78,63 +74,62 @@ export default function Reveal() {
           <Animated.View
             style={{
               backgroundColor: "white",
-              width: "75%",
+              width: "100%",
               flex: 1,
               flexDirection: "column",
               justifyContent: "flex-start",
               alignContent: "center",
-              transform: [
-                { scale: revealItemSizeValue },
-                {
-                  translateY: revealItemSizeValue.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 50],
-                  }),
-                },
-              ],
+              opacity: revealItemSizeValue,
             }}
           >
-            <Text
+            <View
               style={{
-                color: "black",
-                fontSize: 12,
-                textAlign: "center",
-                fontWeight: "bold",
+                flex: 1,
+                flexDirection: "column",
+                width: "100%",
+                alignItems: "center",
               }}
             >
-              You won a ...{" "}
-              {finished
-                ? `${
-                    winningIndex + 1
-                  }. The array index is that minus one though`
-                : "spinning"}
-            </Text>
-            <Image
-              source={images[winningIndex]?.img ?? ""}
-              resizeMode="contain"
-              style={{
-                height: 200,
-                width: 200,
-                alignSelf: "center",
-              }}
-            />
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 12,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                Congrats, you minted
+              </Text>
+              <Image
+                source={images[winningIndex]?.img ?? ""}
+                resizeMode="contain"
+                style={{
+                  height: 200,
+                  width: 200,
+                  alignSelf: "center",
+                }}
+              />
+            </View>
           </Animated.View>
           <View
             style={{
               overflow: "hidden",
               position: "absolute",
-              top: "40%",
+              top: "20%",
             }}
           >
             <Animated.View
               style={{
-                height: 100,
                 width: "100%",
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
-                top: 70,
+                top: 50,
                 zIndex: 100,
+                opacity: revealItemSizeValue.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                }),
                 transform: [
                   {
                     rotate: Animated.modulo(
@@ -145,26 +140,26 @@ export default function Reveal() {
                       outputRange: ["0deg", "-20deg"],
                     }),
                   },
+                  { scaleY: 1.25 },
                 ],
               }}
             >
-              <FontAwesome5 name="map-marker" size={72} color="red" />
+              <FontAwesome5 name="map-marker" size={96} color="red" />
             </Animated.View>
             <Animated.View
               style={{
-                padding: 8,
-                marginTop: 36,
                 width: "auto",
                 justifyContent: "center",
                 alignItems: "center",
+                opacity: revealItemSizeValue.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                }),
                 transform: [
                   {
                     rotate: spinValue.interpolate({
                       inputRange: [0, 1080],
-                      outputRange: [
-                        "0deg",
-                        `${2160 + -1 * winningAngle}deg`,
-                      ],
+                      outputRange: ["0deg", `${2160 + -1 * winningAngle}deg`],
                     }),
                   },
                 ],
@@ -174,33 +169,53 @@ export default function Reveal() {
             </Animated.View>
           </View>
         </View>
-        <Pressable
-          onPress={() => {
-            console.log("asdf clicked spin starting");
-            spinTiming.reset();
-            // start the spinner
-            spinTiming.start(({ finished }) => finished && setIsFinished(true));
-            // kick off the mint
-            mint(winningIndex);
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            bottom: '5%',
+            right: 0,
+            alignSelf: 'flex-end',
+            zIndex: 99999,
+            height: 100 /* FOOTER_HEIGHT */,
+            padding: 8,
           }}
         >
-          <View
-            style={{
-              backgroundColor: "blue",
-              margin: 4,
-              padding: 14,
-              borderRadius: 10,
-              opacity: 0.8,
-              marginBottom: insets.bottom,
-              shadowColor: "#171717",
-              shadowOffset: { width: 0, height: 15 },
-              shadowOpacity: 0.4,
-              shadowRadius: 3,
+          <Pressable
+            onPress={() => {
+              console.log("asdf clicked spin starting");
+              spinTiming.reset();
+              // start the spinner
+              spinTiming.start(
+                ({ finished }) => finished && setIsFinished(true)
+              );
+              // kick off the mint
+              mint(winningIndex);
             }}
           >
-            <Text style={{ color: "white" }}>Asdf</Text>
-          </View>
-        </Pressable>
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 20,
+                padding: 12,
+                backgroundColor: "#081F1F",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "700",
+                  fontSize: 24,
+                }}
+              >
+                Spin the wheel
+              </Text>
+            </View>
+          </Pressable>
+        </View>
       </View>
     </LinearGradient>
   );
