@@ -17,6 +17,7 @@ import Button from "./Button";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Link } from "expo-router";
 import { useRef } from "react";
+import useMyNfts from "../hooks/useMyNfts";
 const image0 = require("../assets/synthwave/synthwave_image-0.png");
 const image1 = require("../assets/synthwave/synthwave_image-1.png");
 const image2 = require("../assets/synthwave/synthwave_image-2.png");
@@ -67,9 +68,9 @@ export const images = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((_, idx) => ({
   title: imageTitles[idx],
 }));
 export default function ImagesGrid({}) {
-  const client = useEmbeddedViemClient();
   console.log("rendering");
   const FOOTER_HEIGHT = 100;
+  const { contractData } = useMyNfts()
 
   return (
     <>
@@ -78,7 +79,7 @@ export default function ImagesGrid({}) {
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         renderItem={({ item, index }) => (
-          <ImageTile item={item} index={index} ownershipCount={undefined} />
+          <ImageTile item={item} index={index} ownershipCount={contractData?.at(index)} />
         )}
         contentContainerStyle={{
           paddingBottom: FOOTER_HEIGHT,

@@ -1,15 +1,6 @@
 import { View, Text, Image } from "react-native";
-import Button from "./Button";
-import useEmbeddedViemClient from "../hooks/useEmbeddedViemClient";
-import { createWalletClient, custom, parseEther } from "viem";
-import { sepolia } from "viem/chains";
-import { isConnected, useEmbeddedWallet, usePrivy } from "@privy-io/expo";
-import useMintNft from "../hooks/useMintNft";
 
-export default function ImageTile({ index, item, ownershipCount } : { index: number, item: { id: number, url: number, img: any, title: string, }, ownershipCount: number | undefined}) {
-  const { userAddress, client } = useEmbeddedViemClient()
-  const rawPrivyWallet = useEmbeddedWallet()
-
+export default function ImageTile({ index, item, ownershipCount } : { index: number, item: { id: number, url: number, img: any, title: string, }, ownershipCount: bigint | undefined}) {
   return (
     <View
       style={[{
@@ -31,7 +22,20 @@ export default function ImageTile({ index, item, ownershipCount } : { index: num
           overflow: 'hidden',
         }}
       />
-      <Text>{item.title}</Text>
+      <Text style={{
+        marginTop: 8,
+        fontSize: 12,
+        fontWeight: '700',
+      }}>
+        {item.title}
+      </Text>
+      <Text style={{
+        marginTop: 4,
+        fontSize: 10,
+        fontWeight: '400',
+      }}>
+        You own {ownershipCount?.toString() ?? 11} tokens
+      </Text>
     </View>
   );
 }
