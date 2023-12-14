@@ -163,7 +163,7 @@ export default function Reveal() {
                       inputRange: [0, 1080],
                       outputRange: [
                         "0deg",
-                        `${2160 + -1 * (winningAngle + 90)}deg`,
+                        `${2160 + -1 * winningAngle}deg`,
                       ],
                     }),
                   },
