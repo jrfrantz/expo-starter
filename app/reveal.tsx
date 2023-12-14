@@ -73,7 +73,6 @@ export default function Reveal() {
         >
           <Animated.View
             style={{
-              backgroundColor: "white",
               width: "100%",
               flex: 1,
               flexDirection: "column",
@@ -93,9 +92,11 @@ export default function Reveal() {
               <Text
                 style={{
                   color: "black",
-                  fontSize: 12,
+                  fontSize: 24,
                   textAlign: "center",
                   fontWeight: "bold",
+                  marginTop: 24,
+                  marginBottom: 48,
                 }}
               >
                 Congrats, you minted
@@ -106,9 +107,18 @@ export default function Reveal() {
                 style={{
                   height: 200,
                   width: 200,
+                  borderRadius: 20,
                   alignSelf: "center",
                 }}
               />
+              <Text
+                style={{
+                  marginTop: 30,
+                  fontWeight: "bold",
+                }}
+              >
+                {images[winningIndex]?.title}
+              </Text>
             </View>
           </Animated.View>
           <View
@@ -173,15 +183,16 @@ export default function Reveal() {
           style={{
             position: "absolute",
             left: 0,
-            bottom: '5%',
+            bottom: "5%",
             right: 0,
-            alignSelf: 'flex-end',
+            alignSelf: "flex-end",
             zIndex: 99999,
             height: 100 /* FOOTER_HEIGHT */,
             padding: 8,
           }}
         >
           <Pressable
+            disabled={finished}
             onPress={() => {
               console.log("asdf clicked spin starting");
               spinTiming.reset();
@@ -200,6 +211,7 @@ export default function Reveal() {
                 borderRadius: 20,
                 padding: 12,
                 backgroundColor: "#081F1F",
+                opacity: finished ? 0.6 : 1,
                 justifyContent: "center",
                 alignItems: "center",
               }}
