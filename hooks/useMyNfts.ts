@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import useEmbeddedViemClient from "./useEmbeddedViemClient";
 import { parseAbi } from "viem";
+import { usePathname, useRouter } from "expo-router";
 
 export default function useMyNfts() {
   const { userAddress, publicClient } = useEmbeddedViemClient()
   const [contractData, setContractData] = useState<readonly bigint[] | undefined>(undefined)
+  const pathname = usePathname()
 
   useEffect(() => {
 
@@ -21,8 +23,11 @@ export default function useMyNfts() {
       return data;
     }
 
-    fetchContractData().then(resp => setContractData(resp))
-  }, [userAddress, publicClient])
+    const intervalId = setInterval(() => {
+      fetchContractData().then(resp => setContractData(resp))
+    }, 1000 * 6)
+    return () => clearInterval(intervalId);
+  }, [userAddress, publicClient, pathname])
 
   return { contractData }
 }

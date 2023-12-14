@@ -1,9 +1,6 @@
-import Fontisto from "@expo/vector-icons/Fontisto";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Text, View, Animated, Easing, Image, Pressable } from "react-native";
-import Button from "../components/Button";
-import RouletteWheel from "../components/RouletteWheel";
 import { images } from "../components/ImagesGrid";
 import useMintNft from "../hooks/useMintNft";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
