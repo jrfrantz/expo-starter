@@ -8,6 +8,7 @@ import { images } from "../components/ImagesGrid";
 import useMintNft from "../hooks/useMintNft";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import DemoRouletteWheel from "../components/DemoRouletteWheel";
 const stirs = [
   "one",
   "two",
@@ -51,6 +52,9 @@ export default function Reveal() {
     finished && revealItemTiming.start();
   }, [finished]);
 
+  /* return (
+    <DemoRouletteWheel />
+  ) */
   return (
     <LinearGradient
       style={{
@@ -138,7 +142,7 @@ export default function Reveal() {
                       360 / stirs.length
                     ).interpolate({
                       inputRange: [0, 360 / stirs.length],
-                      outputRange: ["0deg", "20deg"],
+                      outputRange: ["0deg", "-20deg"],
                     }),
                   },
                 ],
@@ -159,36 +163,14 @@ export default function Reveal() {
                       inputRange: [0, 1080],
                       outputRange: [
                         "0deg",
-                        `${1080 + -1 * (winningAngle + 90)}deg`,
+                        `${2160 + -1 * (winningAngle + 90)}deg`,
                       ],
                     }),
                   },
                 ],
               }}
             >
-              <RouletteWheel
-                panels={stirs.map((stirName, idx) => {
-                  return (
-                    <View
-                      key={stirName}
-                      style={{
-                        flex: 1,
-                        flexDirection: "row",
-                        width: "100%",
-                        justifyContent: "flex-end",
-                        backgroundColor: ["red", "green", "blue"].at(idx % 3),
-                      }}
-                    >
-                      <Text>{stirName} asdf</Text>
-                      <Image
-                        source={images[idx]?.img ?? ""}
-                        resizeMode="contain"
-                        style={{ height: 100, width: 100 }}
-                      />
-                    </View>
-                  );
-                })}
-              />
+              <DemoRouletteWheel />
             </Animated.View>
           </View>
         </View>
