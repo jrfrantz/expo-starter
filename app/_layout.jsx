@@ -15,9 +15,9 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <PrivyProvider appId="clpsidj9n00fujt0fh5n2wamm">
         <Stack>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen name="reveal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="index" options={{ headerTitle: '💾🌴 Synthergy 🌆📼'}}/>
+          <Stack.Screen name="modal" options={{ presentation: "modal", headerTitle: 'Login', }} />
+          <Stack.Screen name="reveal" options={{ presentation: "modal", headerTitle: 'Mint a synth' }} />
         </Stack>
       </PrivyProvider>
       </QueryClientProvider>

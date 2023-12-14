@@ -28,6 +28,7 @@ const image7 = require("../assets/synthwave/synthwave_image-7.png");
 const image8 = require("../assets/synthwave/synthwave_image-8.png");
 const image9 = require("../assets/synthwave/synthwave_image-9.png");
 const image10 = require("../assets/synthwave/synthwave_image-10.png");
+const image11 = require("../assets/synthwave/synthwave_image-11.png");
 
 const imagesAssets = [
   image0,
@@ -41,6 +42,7 @@ const imagesAssets = [
   image8,
   image9,
   image10,
+  image11,
 ];
 
 const imageTitles = [
@@ -55,9 +57,10 @@ const imageTitles = [
   "Torn Rider",
   "Fashionista",
   "Beach B0d",
+  "¿What the Watercolor",
 ];
 
-export const images = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, idx) => ({
+export const images = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((_, idx) => ({
   id: idx,
   url: idx,
   img: imagesAssets.at(idx),
