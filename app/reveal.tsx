@@ -116,6 +116,16 @@ export default function Reveal() {
               >
                 {images[winningIndex]?.title}
               </Text>
+              <Text
+                style={{
+                  marginTop: 10,
+                  fontWeight: "500",
+                  maxWidth: "70%",
+                  fontSize: 10,
+                }}
+              >
+                This might take about a minute to show up in your account.
+              </Text>
             </View>
           </Animated.View>
           <View
